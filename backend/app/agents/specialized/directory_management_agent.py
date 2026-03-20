@@ -4,6 +4,7 @@ from datetime import datetime
 import uuid
 
 from ...domain.enriched_entities import ValidationReport, ValidationBatch, EnrichedProvider
+from ...infrastructure.models.grok_model import GrokModel
 from ...infrastructure.logging import get_logger
 
 
@@ -76,6 +77,20 @@ class DirectoryManagementService:
             "created_at": datetime.utcnow().isoformat(),
         }
 
-# Optional: If we want to expose this as a node in the graph (e.g. for a "Reporting" phase)
-# we can wrap it. But since it takes a batch, it might not fit the per-provider graph.
 
+class DirectoryManagementAgent:
+    """Agent for directory management (mostly a wrapper for the service)."""
+
+    def __init__(self, model: GrokModel):
+        self.model = model
+        self.service = DirectoryManagementService()
+
+    # The orchestrator doesn't currently call methods on this agent in the workflow provided.
+    # It just instantiates it. If it were to call something, we'd add it here.
+    # For now, we basically provide a placeholder or proxy to the service.
+
+    async def generate_report(self, batch: ValidationBatch, providers: List[EnrichedProvider]) -> ValidationReport:
+        return await self.service.generate_report(batch, providers)
+
+    async def create_alert(self, provider: EnrichedProvider, alert_type: str) -> Dict[str, Any]:
+        return await self.service.create_alert(provider, alert_type)
