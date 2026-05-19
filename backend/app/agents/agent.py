@@ -6,7 +6,6 @@
 # from .tools.web_search_tool import WebSearchTool
 
 
-
 # class NppesTool(Tool):
 #     name = "NPPES Provider Lookup"
 #     description = "Searches the NPI registry for healthcare providers."
